@@ -31,3 +31,18 @@ PERMISSIONS = [
 'surveys.view_responses',
 'surveys.manage_settings',
 ]
+
+ROLE_PERMISSIONS = {
+    "admin": ["*"],
+    "manager": [
+        "add_survey",
+        "change_survey",
+        "view_responses",
+        "view_survey",
+    ],
+    "employee": [
+        "add_survey",
+        "view_responses",
+        "view_survey",
+    ],
+}
