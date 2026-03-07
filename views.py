@@ -3,6 +3,8 @@ Surveys Module Views
 """
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
+from django.http import HttpResponse
+from django.urls import reverse
 from django.shortcuts import get_object_or_404, render as django_render
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -113,6 +115,7 @@ def surveys_list(request):
     }
 
 @login_required
+@htmx_view('surveys/pages/survey_add.html', 'surveys/partials/survey_add_content.html')
 def survey_add(request):
     hub_id = request.session.get('hub_id')
     if request.method == 'POST':
@@ -130,10 +133,13 @@ def survey_add(request):
         obj.end_date = end_date
         obj.response_count = response_count
         obj.save()
-        return _render_surveys_list(request, hub_id)
-    return django_render(request, 'surveys/partials/panel_survey_add.html', {})
+        response = HttpResponse(status=204)
+        response['HX-Redirect'] = reverse('surveys:surveys_list')
+        return response
+    return {}
 
 @login_required
+@htmx_view('surveys/pages/survey_edit.html', 'surveys/partials/survey_edit_content.html')
 def survey_edit(request, pk):
     hub_id = request.session.get('hub_id')
     obj = get_object_or_404(Survey, pk=pk, hub_id=hub_id, is_deleted=False)
@@ -146,7 +152,7 @@ def survey_edit(request, pk):
         obj.response_count = int(request.POST.get('response_count', 0) or 0)
         obj.save()
         return _render_surveys_list(request, hub_id)
-    return django_render(request, 'surveys/partials/panel_survey_edit.html', {'obj': obj})
+    return {'obj': obj}
 
 @login_required
 @require_POST
