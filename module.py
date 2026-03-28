@@ -7,6 +7,7 @@ MODULE_ICON = 'material:checklist'
 MODULE_DESCRIPTION = _('Advanced surveys, questionnaires and response analytics')
 MODULE_AUTHOR = 'ERPlora'
 MODULE_CATEGORY = 'marketing'
+HAS_MODELS = True
 
 MENU = {
     'label': _('Surveys'),
